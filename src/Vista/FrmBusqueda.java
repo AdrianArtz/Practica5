@@ -9,7 +9,8 @@ import javax.swing.JOptionPane;
 public class FrmBusqueda extends javax.swing.JFrame {
     private ControladorAuto CA = new ControladorAuto();
     private int aleatorios = 10000;
-    private int x, y;
+    private int x;
+    
     public FrmBusqueda() {
         initComponents();
         setLocationRelativeTo(this);
@@ -333,6 +334,7 @@ public class FrmBusqueda extends javax.swing.JFrame {
                 tipoOrdenacionBox.setEnabled(true);
                 mostrarTabla();
             }
+            
 
         } catch (PosicionException ex) {
         }

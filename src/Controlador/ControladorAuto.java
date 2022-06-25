@@ -27,10 +27,12 @@ public class ControladorAuto {
             System.out.println("Se realizo bien la ordenacion por quickSort");
         }
     }
+    
     public void buscar(String atributo, Object dato) throws Exception{
-        list = listaAutos;
+        this.list = listaAutos;
         list.setLista(list.getLista().busquedaBinaria(atributo, dato));
         
+        System.out.println(list.getLista().obtenerDato(0).info());
         System.out.println("Se realizo bien la busqueda binaria");
     }
     public String[][] mostrarLista() throws PosicionException {
