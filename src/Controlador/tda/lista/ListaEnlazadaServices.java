@@ -123,7 +123,7 @@ public class ListaEnlazadaServices <E> {
     
     public ListaEnlazada<E> busquedaBinaria(String atributo, Object dato){
         try {
-            lista.busquedaBinaria(atributo, dato);
+            return lista.busquedaBinaria(atributo, dato);
         } catch (Exception ex) {
         }
         return null;

@@ -1,3 +1,4 @@
+
 package Vista;
 //@authors: samaelhg (Adrián Hernández) karenCat (Karen Gonzaga)
 
@@ -9,8 +10,7 @@ import javax.swing.JOptionPane;
 public class FrmBusqueda extends javax.swing.JFrame {
     private ControladorAuto CA = new ControladorAuto();
     private int aleatorios = 10000;
-    private int x;
-    
+    private int x, y;
     public FrmBusqueda() {
         initComponents();
         setLocationRelativeTo(this);
@@ -22,9 +22,7 @@ public class FrmBusqueda extends javax.swing.JFrame {
 
         String[] marcasAleatorios = new String[cantidad];
         String[] marcas = {"Renault", "Ferrari", "Bentley", "Chevrolet", "Ford", "Honda", "Hyundai", "Suzuki",
-            "Toyota", "Volvo", "Mazda", "Karen", "Jaguar"};
-
-
+            "Toyota", "Volvo", "Mazda", "KG", "Jaguar"};
         for (int i = 0; i < cantidad; i++) {
             marcasAleatorios[i] = marcas[(int) (Math.floor(Math.random() * ((marcas.length - 1) - 0 + 1) + 0))];
         }
@@ -64,9 +62,6 @@ public class FrmBusqueda extends javax.swing.JFrame {
         String[] objetos1 = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"
                             ,"Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
         String[] objetos2 = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
-
-
-
         for (int i = 0; i < cantidad; i++) {
             Aleatorios[i] = objetos[(int) (Math.floor(Math.random() * ((objetos.length - 1) - 0 + 1) + 0))] 
                           + objetos1[(int) (Math.floor(Math.random() * ((objetos.length - 1) - 0 + 1) + 0))]
@@ -276,7 +271,6 @@ public class FrmBusqueda extends javax.swing.JFrame {
         try {
             if (x >= 3) {
                 crearBttn.setEnabled(false);
-                
             }else{
                 guardar();
                 limpiar();
@@ -334,7 +328,6 @@ public class FrmBusqueda extends javax.swing.JFrame {
                 tipoOrdenacionBox.setEnabled(true);
                 mostrarTabla();
             }
-            
 
         } catch (PosicionException ex) {
         }
@@ -374,8 +367,9 @@ public class FrmBusqueda extends javax.swing.JFrame {
         mostrarTabla();
         JOptionPane.showMessageDialog(this, "Aleatorios generados correctamente");
     }
+    
     private void mostrarTabla() throws PosicionException {
-        String lista[][] = CA.mostrarLista();
+        String lista[][] = CA.mostrarLista(CA.getListaAutos());
         tablaListaAutos.setModel(new javax.swing.table.DefaultTableModel(
                 lista,
                 new String[]{
@@ -384,7 +378,7 @@ public class FrmBusqueda extends javax.swing.JFrame {
         ));
     }
     private void mostrarBusqueda() throws PosicionException {
-        String lista[][] = CA.mostrarBusqueda();
+        String lista[][] = CA.mostrarLista(CA.getListaB());
         tablaListaAutos.setModel(new javax.swing.table.DefaultTableModel(
                 lista,
                 new String[]{
@@ -420,7 +414,7 @@ public class FrmBusqueda extends javax.swing.JFrame {
 
         } else {
             CA.buscar(ordenarPorAtributo, dato);
-            mostrarBusqueda();
+            mostrarBusqueda();            
             reiniciarBox();
         }
     }

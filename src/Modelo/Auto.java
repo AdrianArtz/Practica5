@@ -76,15 +76,5 @@ public class Auto {
     public void setSeguro(Boolean seguro) {
         this.seguro = seguro;
     }
-    
-    public String info(){
-        return "Marca: "+marca+
-               "\nModelo: "+modelo+
-               "\nColor: "+color+
-               "\nPrecio: "+precio+
-                "\nMatricula: "+matricula+
-                "\nAño: "+year+
-                "\nSeguro: "+seguro;
-    }
 
 }

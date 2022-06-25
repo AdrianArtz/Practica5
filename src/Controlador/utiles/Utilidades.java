@@ -109,6 +109,10 @@ public class Utilidades {
         return clase.getSuperclass().getSimpleName().equalsIgnoreCase("Number");
     }
     
+    public static Boolean isInteger(Class clase) {
+        return clase.getSuperclass().getSimpleName().equalsIgnoreCase("Integer");
+    }
+    
     public static Boolean isString(Class clase) {
         return clase.getSimpleName().equalsIgnoreCase("String");
     }

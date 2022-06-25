@@ -450,7 +450,6 @@ public class ListaEnlazada<E> {
                 while (inferior <= superior) {
                     System.out.println("condicional while");
                     centro = (superior + inferior) / 2;
-
                     Method method1 = getMethod("get" + Utilidades.capitalizar(atributo), matriz[centro].getClass());
                     E aux = null;
                     if (field.getType().getSuperclass().getSimpleName().equalsIgnoreCase("Number")
@@ -459,8 +458,7 @@ public class ListaEnlazada<E> {
                         Number datoJ = (Number) dato;
                         Number datoX = (Number) method1.invoke(matriz[centro]);
                         if (datoJ.doubleValue() == datoX.doubleValue()) {
-                            aux = (E) matriz[centro];
-                            System.out.println("Igual ");
+                            aux = (E) matriz[centro]; System.out.println("Igual ");
                             resultado.insertar(aux);
                             return resultado;
                         } else if (datoJ.doubleValue() < datoX.doubleValue()) {
@@ -471,6 +469,7 @@ public class ListaEnlazada<E> {
                     } else if (Utilidades.isString(field.getType()) && Utilidades.isString(dato.getClass())) {
                         String datoJ = (String) dato;
                         String datoX = (String) method1.invoke(matriz[centro]);
+                        System.out.println("String");
                         if (datoX.toLowerCase().startsWith(datoJ.toLowerCase()) || datoX.toLowerCase().endsWith(datoJ.toLowerCase())
                                 || datoX.toLowerCase().equalsIgnoreCase(datoJ.toLowerCase())) {
                             aux = (E) matriz[centro];
@@ -503,39 +502,6 @@ public class ListaEnlazada<E> {
         return resultado;
     }
 
-    public ListaEnlazada<E> busquedaSecuencial(String atributo, Object dato) throws Exception {
-        Class<E> clazz = null;
-        E[] matriz = null;
-        ListaEnlazada<E> resultado = new ListaEnlazada<>();
-        if (size > 0) {
-            matriz = toArray();
-
-            clazz = (Class<E>) cabecera.getDato().getClass();//primitivo, Dato envolvente, Object
-            Boolean isObject = Utilidades.isObject(clazz);//si es objeto
-            if (isObject) {
-                Field field = Utilidades.getField(atributo, clazz);
-//                Method method = getMethod("get" + Utilidades.capitalizar(atributo), field.getClass());
-
-                for (int i = 0; i < matriz.length; i++) {
-                    Method method1 = getMethod("get" + Utilidades.capitalizar(atributo), matriz[i].getClass());
-                    E aux = buscarDatoPosicionObjeto(i, matriz, field.getType(), dato, method1);
-                    if (aux != null) {
-                        resultado.insertar(aux);
-                    }
-                }
-            } else {
-                for (int i = 0; i < matriz.length; i++) {
-                    E aux = buscarDatoPosicion(i, matriz, clazz, (E) dato);
-                    if (aux != null) {
-                        resultado.insertar(aux);
-                    }
-                }
-            }
-
-        }
-        return resultado;
-    }
-    
     private Object[] evaluaCambiarDatoNoObjeto(Class clazz, E auxJ, E auxJ1, TipoOrdenacion tipoOrdenacion, Integer j) throws Exception {
         Object aux[] = new Object[2];
         if (clazz.getSuperclass().getSimpleName().equalsIgnoreCase("Number")) {
@@ -667,6 +633,8 @@ public class ListaEnlazada<E> {
             Number datoJ1 = (Number) matriz[j];
             if (datoJ.doubleValue() == datoJ1.doubleValue()) {
                 aux = (E) datoJ1;
+            } else if (datoJ.doubleValue() < datoJ1.doubleValue()) {
+                aux = (E) null;
             }
         } else if (Utilidades.isString(clazz)) {
             String datoJ = (String) dato;
@@ -690,33 +658,33 @@ public class ListaEnlazada<E> {
         return aux;
     }
 
-    private E buscarDatoPosicionObjeto(Integer centro, E[] matriz, Class clazz, Object dato, Method method1) throws Exception {
+    private E buscarDatoPosicionObjeto(Integer j, E[] matriz, Class clazz, Object dato, Method method1) throws Exception {
         E aux = null;
         if (clazz.getSuperclass().getSimpleName().equalsIgnoreCase("Number")
                 && dato.getClass().getSuperclass().getSimpleName().equalsIgnoreCase("Number")) {
             Number datoJ = (Number) dato;
-            Number datoJ1 = (Number) method1.invoke(matriz[centro]);
+            Number datoJ1 = (Number) method1.invoke(matriz[j]);
             if (datoJ.doubleValue() == datoJ1.doubleValue()) {
-                aux = (E) matriz[centro];
+                aux = (E) matriz[j];
             } else if (datoJ.doubleValue() < datoJ1.doubleValue()) {
-                aux = (E) matriz[centro];
+                aux = (E) null;
             }
         } else if (Utilidades.isString(clazz) && Utilidades.isString(dato.getClass())) {
             String datoJ = (String) dato;
-            String datoJ1 = (String) method1.invoke(matriz[centro]);
+            String datoJ1 = (String) method1.invoke(matriz[j]);
 
             if (datoJ1.toLowerCase().startsWith(datoJ.toLowerCase())
                     || datoJ1.toLowerCase().endsWith(datoJ.toLowerCase())
                     || datoJ1.toLowerCase().equalsIgnoreCase(datoJ.toLowerCase())) {
                 //cambioBurbuja(j, matriz);
-                aux = (E) matriz[centro];
+                aux = (E) matriz[j];
             }
 
         } else if (Utilidades.isCharacter(clazz) && Utilidades.isCharacter(dato.getClass())) {
             Character datoJ = (Character) dato;
-            Character datoJ1 = (Character) method1.invoke(matriz[centro]);
+            Character datoJ1 = (Character) method1.invoke(matriz[j]);
             if (datoJ.charValue() == datoJ1.charValue()) {
-                aux = (E) matriz[centro];
+                aux = (E) matriz[j];
             }
 
         }
@@ -725,20 +693,30 @@ public class ListaEnlazada<E> {
 
     public static void main(String[] args) throws PosicionException, Exception {
         ListaEnlazada<Auto> LP = new ListaEnlazada<>();
+LP.insertar(new Auto("Toyota", "Camioneta", "Negro", 3125625.23, "LBJ-531", 2010, Boolean.FALSE));
+        LP.insertar(new Auto("Hyundai", "Taxi", "Negro", 125625.23, "LBB-256", 2010, Boolean.TRUE));
+        LP.insertar(new Auto("Mazda", "Bus", "Azul", 245625.23, "XGB-256", 2013, Boolean.FALSE));
+        LP.insertar(new Auto("Toyota", "Camioneta", "Negro", 3125625.23, "LBJ-531", 2051, Boolean.FALSE));
+        LP.insertar(new Auto("Toyota", "Camioneta", "Negro", 3125625.23, "LBJ-531", 2010, Boolean.FALSE));
+        LP.insertar(new Auto("Toyota", "Camioneta", "Negro", 3125625.23, "LBJ-531", 2010, Boolean.FALSE));
 
-        LP.insertar(new Auto("Hyundai", "Taxi", "Negro", 125625.23, "LBB-256", 2010, true));
-        LP.insertar(new Auto("Mazda", "Bus", "Azul", 245625.23, "XGB-256", 2013, false));
-        LP.insertar(new Auto("Toyota", "Camioneta", "Negro", 3125625.23, "LBJ-531", 2051, false));
+        LP.quickSort("year", TipoOrdenacion.ASCENDENTE);
         for (int i = 0; i < LP.getSize(); i++) {
-            System.out.println(LP.obtenerDato(i).info());
+            System.out.println(LP.obtenerDato(i).getYear());
         }
-        LP.metodoShell("year", TipoOrdenacion.ASCENDENTE);
-        for (int i = 0; i < LP.getSize(); i++) {
-            System.out.println(LP.obtenerDato(i).info());
+        ListaEnlazada<Auto> Lo = LP.busquedaBinaria("year", 2010);
+        for (int i = 0; i < Lo.getSize(); i++) {
+            System.out.println(Lo.obtenerDato(i).getYear());
         }
-        ListaEnlazada<Auto> busqueda= LP.busquedaBinaria("year", 2010);
-        for (int i = 0; i < busqueda.getSize(); i++) {
-            System.out.println(busqueda.obtenerDato(i).info());
+        LP.quickSort("marca", TipoOrdenacion.ASCENDENTE);
+        Lo = LP.busquedaBinaria("marca", "Mazda");
+        for (int i = 0; i < Lo.getSize(); i++) {
+            System.out.println(Lo.obtenerDato(i).getMarca());
+        }
+        LP.quickSort("marca", TipoOrdenacion.ASCENDENTE);
+        Lo = LP.busquedaBinaria("marca", "Toyota");
+        for (int i = 0; i < Lo.getSize(); i++) {
+            System.out.println(Lo.obtenerDato(i).getMarca());
         }
     }
 }
